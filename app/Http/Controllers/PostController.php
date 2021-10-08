@@ -12,34 +12,33 @@ class PostController extends Controller
     //Traitas has followers
     public function index()
     {
-        //su reitingu reiktu
         return response()->json(["posts" => Post::all()], 200);
     }
     public function show($slug)
     {
-        // FIXME: like'ai, komentarai, autorius
-
-        $post = Post::where('slug', $slug)->with(['comments', 'author'])->firstOrFail();
-        return response()->json(compact('post'), 200);
+        $post = Post::where('slug', $slug)->firstOrFail();
+        return response()->json('post', 200);
     }
 
-    public function create(PostRequest $request)
+    public function store(PostRequest $request)
     {
         $validated = $request->validated();
         $post = Post::create($validated);
-        return response()->json(compact('post'), 201);
+        return response()->json($post, 201);
     }
 
-    public function edit(Post $post, PostRequest $request)
+    public function update($slug, PostRequest $request)
     {
+        $post = Post::where('slug', $slug)->firstOrFail();
         $validated = $request->validated();
         $post->updateOrFail($validated);
-        return response()->json(compact('post'), 200);
+        return response()->json($post, 200);
     }
 
-    public function delete(Post $post)
+    public function destroy($slug)
     {
-        $post->delete();
-        return response()->json(compact('post'), 200);
+        $post = Post::where('slug', $slug)->firstOrFail();
+        $post->deleteOrFail();
+        return response()->json($post, 202);
     }
 }

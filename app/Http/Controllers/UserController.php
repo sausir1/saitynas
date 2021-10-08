@@ -18,9 +18,9 @@ class UserController extends Controller
         $users = User::all();
         return response()->json(compact('users'), 200);
     }
-    public function show($id)
+    public function show($username)
     {
-        $user = User::with('goals')->findOrFail($id);
+        $user = User::with('goals')->where('username', $username)->firstOrFail();
         return response()->json(compact('user'));
     }
 }

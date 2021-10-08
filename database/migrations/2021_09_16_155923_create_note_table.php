@@ -17,7 +17,8 @@ class CreateNoteTable extends Migration
             $table->increments('id');
             $table->string('note', 500);
             $table->unsignedInteger('reading_id');
-            $table->foreign('reading_id')->references('id')->on('books')->onDelete('cascade');
+            $table->timestamps();
+            $table->foreign('reading_id')->references('book_id')->on('readings')->onDelete('cascade');
         });
     }
 

@@ -11,37 +11,37 @@ class BadgeController extends Controller
     public function index()
     {
         $badges = Badge::all();
-        return response()->json(compact('badges'), 200);
+        return response()->json($badges, 200);
     }
 
     public function show(Badge $badge)
     {
-        return response()->json(compact('badge'), 200);
+        return response()->json($badge, 200);
     }
 
     public function getUserBadges()
     {
         $badges = request()->user()->badges;
-        return response()->json(compact('badges'));
+        return response()->json($badges);
     }
 
-    public function edit(Badge $badge, BadgeRequest $request)
+    public function update(Badge $badge, BadgeRequest $request)
     {
         $validated = $request->validated();
         $badge->updateOrFail($validated);
-        return response()->json(compact('badge'), 200);
+        return response()->json($badge, 200);
     }
 
-    public function create(BadgeRequest $request)
+    public function store(BadgeRequest $request)
     {
         $validated = $request->validated();
         $badge = Badge::create($validated);
-        return response()->json(compact('badge'), 201);
+        return response()->json($badge, 201);
     }
 
-    public function delete(Badge $badge)
+    public function destroy(Badge $badge)
     {
-        $badge->delete();
-        return response()->json(compact('badge'));
+        $badge->deleteOrFail();
+        return response()->json($badge, 202);
     }
 }

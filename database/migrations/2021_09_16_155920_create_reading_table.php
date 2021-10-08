@@ -14,14 +14,16 @@ class CreateReadingTable extends Migration
     public function up()
     {
         Schema::create('readings', function (Blueprint $table) {
-            $table->increments('id');
+            $table->primary(['user_id', 'book_id']);
+            // $table->increments('id');
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('book_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('book_id')->references('id')->on('books')->onDelete('cascade');
             $table->integer('current_page');
             $table->integer('total_pages');
-            $table->date('started_at');
+            $table->timestamps();
+            $table->date('started_at')->nullable();
             $table->date('finished_at')->nullable();
             $table->boolean('owns')->nullable();
         });

@@ -11,35 +11,35 @@ class GoalController extends Controller
     public function index()
     {
         $goals = request()->user()->goals;
-        return response()->json(compact('goals'), 200);
+        return response()->json($goals, 200);
     }
 
     public function show($id)
     {
         $goal = Goal::where('user_id', request()->user()->id)
             ->where('id', $id)->firstOrFail();
-        return response()->json(compact('goal'));
+        return response()->json($goal);
     }
 
-    public function create(GoalRequest $request)
+    public function store(GoalRequest $request)
     {
         $validated = $request->validated();
         $goal = Goal::create($validated);
-        return response()->json(compact('goal'), 201);
+        return response()->json($goal, 201);
     }
 
-    public function edit(Goal $goal, GoalRequest $request)
+    public function update(Goal $goal, GoalRequest $request)
     {
         $validated = $request->validated();
         $goal->updateOrFail($validated);
-        return response()->json(compact('goal'));
+        return response()->json($goal);
     }
 
-    public function delete($id)
+    public function destroy($id)
     {
         $goal = Goal::where('user_id', request()->user()->id)
             ->where('id', $id)->firstOrFail();
-        $goal->delete();
-        return response()->json(compact('goal'));
+        $goal->deleteOrFail();
+        return response()->json($goal, 202);
     }
 }

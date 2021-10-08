@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
-use App\Models\Traits\HasLikes;
+use App\Models\HasFollowers;
+use App\Models\HasLikes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
-    use HasFactory, HasLikes;
+    use HasFactory, HasLikes, HasFollowers;
 
     protected $fillable = [
         "title",

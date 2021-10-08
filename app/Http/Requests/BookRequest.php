@@ -12,25 +12,11 @@ class BookRequest extends FormRequest
      *
      * @return bool
      */
-    // public function authorize()
-    // {
-    //     return true;
-    // }
+    public function authorize()
+    {
+        return true;
+    }
 
-    // public function messages()
-    // {
-    //     return [
-    //         'title.required' => 'A title is required',
-    //         'body.required' => 'A message is required',
-    //     ];
-    // }
-
-    // public function attributes()
-    // {
-    //     return [
-    //         'email' => 'email address',
-    //     ];
-    // }
 
     /**
      * Prepare the data for validation.
@@ -39,9 +25,11 @@ class BookRequest extends FormRequest
      */
     protected function prepareForValidation()
     {
+        $id = $this->route()->author ? $this->route()->author : $this->author_id;
         if (!$this->slug) {
             $this->merge([
                 'slug' => Str::slug($this->title . ' ' . time()),
+                'author_id' => $id,
             ]);
         }
     }

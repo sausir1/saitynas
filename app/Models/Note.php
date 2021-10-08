@@ -9,10 +9,16 @@ class Note extends Model
 {
     use HasFactory;
 
-    public function author()
-    {
-        return $this->belongsTo(User::class, 'user_id', 'id');
-    }
+    protected $casts = [
+        'created_at' => 'date: Y-m-d H:i:s',
+        'updated_at' => 'date: Y-m-d H:i:s'
+
+    ];
+
+    protected $fillable = [
+        'reading_id',
+        'note'
+    ];
 
     public function onBook()
     {

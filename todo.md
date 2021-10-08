@@ -39,7 +39,7 @@
   - [x] peržiūrėti savo informacija
   - [x] Peržiūrėti savo ženklelius
   - [ ] peržiūrėti savo parašytus komentarus
-  - [ ] peržiūrėti savo sekamus
+  - [x] peržiūrėti savo sekamus VISUS //kiti per query stringa
     - [ ] knygas
     - [ ] naudotojus
     - [ ] postus
@@ -56,4 +56,17 @@
     - [x] pašalinti tikslus,
     - [x] redaguoti tiksla
     - [x] peržiureti viena tikslą
-- [ ] Sutvarkyti HAS FOLLOWS trait'ą!
+- [x] Sutvarkyti HAS FOLLOWS trait'ą!
+- [ ] Sutvarkyti route'us iki 3-ojo lygio!
+- [ ] Bodyje viskas padaryta per raw json siuntimas
+- [ ] Paklausti, jei tusicas sarasas ka grazinti turetu pvz author/4546/books ir jei nera tokio autoriaus dar.
+
+- [x] Pirmas lygis su autoriais
+  - [x] antras lygis
+    - [x] Su knygomis
+      - [x] Trečias lygis
+        - [x] Komentarai
+- [ ] Pirmas lygis su prisijungusiu useriu
+  - [ ] antras lygis Readings
+    > Nežinau ką grazinti POST METODE kai bandua prideti nauja reading, nors toks egzistuoja jau...
+    - [ ] Trecias lygis /auth/readings/123/notes

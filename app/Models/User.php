@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\HasFollowers;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -10,8 +11,12 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasFollowers;
 
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d H:i:s',
+        'updated_at' => 'datetime:Y-m-d H:i:s'
+    ];
     protected $hidden = [
         'password',
         'remember_token',
@@ -27,6 +32,11 @@ class User extends Authenticatable implements JWTSubject
         'username',
         'password'
     ];
+
+    public function whereReadings($bookId)
+    {
+        return $this->readings()->wherePivot('book_id', $bookId);
+    }
 
     public function badges()
     {
@@ -45,17 +55,12 @@ class User extends Authenticatable implements JWTSubject
 
     public function readings()
     {
-        return $this->belongsToMany(Book::class, 'readings')->withPivot(['current_page', 'total_pages', 'started_at', 'finished_at', 'owns']);
+        return $this->belongsToMany(Book::class, 'readings')->withPivot(['current_page', 'total_pages', 'started_at', 'finished_at', 'owns'])->withTimestamps();
     }
 
     public function ownedBooks()
     {
         return $this->belongsToMany(Book::class, 'readings')->wherePivot('owns', '!=', 0)->withPivot(['current_page', 'total_pages', 'started_at', 'finished_at', 'owns']);
-    }
-
-    public function follow($followable)
-    {
-        return $this->followedUsers()->toggle($followable);
     }
 
     public function followedUsers()
@@ -78,19 +83,14 @@ class User extends Authenticatable implements JWTSubject
         return $this->morphedByMany(Post::class, 'followable', 'follows')->withTimestamps();
     }
 
-    public function followers()
-    {
-        return $this->morphToMany(User::class, 'followable', 'follows')->withTimestamps();
-    }
-
     public function postComments()
     {
-        return $this->morphedByMany(Post::class, 'commentable', 'comments')->withTimestamps()->withPivot('comment')->withPivot('id');
+        return $this->morphedByMany(Post::class, 'commentable', 'comments')->withTimestamps()->withPivot(['comment', 'id']);
     }
 
     public function bookComments()
     {
-        return $this->morphedByMany(Book::class, 'commentable', 'comments')->withTimestamps()->withPivot('comment')->withPivot('id');
+        return $this->morphedByMany(Book::class, 'commentable', 'comments')->withTimestamps()->withPivot(['comment', 'id']);
     }
 
     public function getJWTIdentifier()

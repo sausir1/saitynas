@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\HasFollowers;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Author extends Model
 {
-    use HasFactory;
+    use HasFactory, HasFollowers;
 
     protected $fillable = [
         "name",
@@ -19,6 +20,15 @@ class Author extends Model
     ];
 
     public $timestamps = false;
+
+    public function scopeAuthorBooks($query, $authorId)
+    {
+        $query->when(
+            $authorId ?? false,
+            fn ($query, $id) =>
+            $query->where('id', $id)
+        );
+    }
 
     public function books()
     {

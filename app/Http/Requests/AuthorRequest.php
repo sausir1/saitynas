@@ -21,7 +21,8 @@ class AuthorRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        if (!$this->slug) {
+
+        if ($this->isMethod('POST')) {
             $this->merge([
                 'slug' => Str::slug($this->name . $this->surname . ' ' . time()),
             ]);

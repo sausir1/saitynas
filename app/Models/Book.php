@@ -2,12 +2,18 @@
 
 namespace App\Models;
 
+use App\Models\HasFollowers;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Book extends Model
 {
-    use HasFactory;
+    use HasFactory, HasFollowers;
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 
     protected $fillable = [
         "title",
@@ -19,10 +25,19 @@ class Book extends Model
         "category_id"
     ];
 
+    public function scopeWrittenBy($query, $author)
+    {
+        $query->when(
+            $author ?? false,
+            fn ($query, $author) =>
+            $query->where('author_id', $author)
+        );
+    }
+
 
     public function comments()
     {
-        return $this->morphToMany(User::class, 'commentable', 'comments')->withPivot('comment')->withTimestamps();
+        return $this->morphToMany(User::class, 'commentable', 'comments')->withPivot(['comment', 'id'])->withTimestamps();
     }
 
     public function ratings()
@@ -38,10 +53,5 @@ class Book extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
-    }
-
-    public function followers()
-    {
-        return $this->morphToMany(User::class, 'followable', 'follows');
     }
 }

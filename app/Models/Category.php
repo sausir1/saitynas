@@ -9,6 +9,13 @@ class Category extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'slug',
+        'description',
+        'created_at'
+    ];
+
     public $timestamps = false;
 
     public function books()
