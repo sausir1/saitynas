@@ -31,18 +31,18 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('users', [UserController::class, 'index']);
 Route::get('users/{user:username}', [UserController::class, 'show'])->name('user');
 
-/*Autoriai, Autorių knygos, autorių knygos komentarai*/
-Route::apiResource('authors', AuthorController::class);
-Route::apiResource('authors.books', BookController::class);
-Route::apiResource('authors.books.comments', CommentController::class);
-/*-------------------------------------------------------------*/
-
-Route::apiResource('badges', BadgeController::class);
 // Route::apiResource('badges.users', [BadgeUsersController::class]);
-Route::apiResource('categories', CategoryController::class);
 
 
 Route::group(['middleware' => ['auth.jwt']], function () {
+
+    Route::prefix('posts')->group(function () {
+        Route::get('/', [PostController::class, 'index']);
+        Route::get('/{post:slug}', [PostController::class, 'show']);
+        Route::post('/', [PostController::class, 'store']);
+        Route::patch('/{post:slug}', [PostController::class, 'update']);
+        Route::delete('/{post:slug}', [PostController::class, 'destroy']);
+    });
 
     /* BASIC auth user's functions*/
     Route::prefix('auth')->group(function () {
@@ -52,6 +52,21 @@ Route::group(['middleware' => ['auth.jwt']], function () {
         Route::get('/follows', [FollowController::class, 'getMyFollows']); //what auth user is following
         Route::post('/follows', [FollowController::class, 'follow']); // start to follow
     });
+
+
+    /*Autoriai, Autorių knygos, autorių knygos komentarai*/
+    Route::apiResource('authors', AuthorController::class);
+    Route::apiResource('authors.books', BookController::class);
+    Route::apiResource('authors.books.comments', CommentController::class);
+    /*-------------------------------------------------------------*/
+
+    Route::apiResource('badges', BadgeController::class);
+
+
+    Route::apiResource(
+        'categories',
+        CategoryController::class
+    );
 
     /*Auth user's READINGS*/
     Route::prefix('auth/readings')->group(function () {
@@ -83,14 +98,6 @@ Route::group(['middleware' => ['auth.jwt']], function () {
 
 Route::get('/', [BookController::class, 'index']);
 
-
-Route::prefix('posts')->group(function () {
-    Route::get('/', [PostController::class, 'index']);
-    Route::get('/{post:slug}', [PostController::class, 'show']);
-    Route::post('/', [PostController::class, 'store']);
-    Route::patch('/{post:slug}', [PostController::class, 'update']);
-    Route::delete('/{post:slug}', [PostController::class, 'destroy']);
-});
 
 
 
