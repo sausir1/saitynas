@@ -36,6 +36,8 @@ Route::get('users/{user:username}', [UserController::class, 'show'])->name('user
 
 Route::group(['middleware' => ['auth.jwt']], function () {
 
+
+    // TODO: Padaryta
     Route::prefix('posts')->group(function () {
         Route::get('/', [PostController::class, 'index']);
         Route::get('/{post:slug}', [PostController::class, 'show']);
@@ -44,6 +46,10 @@ Route::group(['middleware' => ['auth.jwt']], function () {
         Route::delete('/{post:slug}', [PostController::class, 'destroy']);
     });
 
+    Route::apiResource('posts.comments', CommentController::class);
+
+
+    // TODO: Padaryta
     /* BASIC auth user's functions*/
     Route::prefix('auth')->group(function () {
         Route::get('', [AuthController::class, 'getUser']);
@@ -54,6 +60,7 @@ Route::group(['middleware' => ['auth.jwt']], function () {
     });
 
 
+    // TODO: PADARYTA
     /*Autoriai, Autorių knygos, autorių knygos komentarai*/
     Route::apiResource('authors', AuthorController::class);
     Route::apiResource('authors.books', BookController::class);
@@ -63,11 +70,14 @@ Route::group(['middleware' => ['auth.jwt']], function () {
     Route::apiResource('badges', BadgeController::class);
 
 
+    // TODO: padaryta
     Route::apiResource(
         'categories',
         CategoryController::class
     );
 
+
+    // TODO: padaryta pilnai
     /*Auth user's READINGS*/
     Route::prefix('auth/readings')->group(function () {
         Route::get('', [ReadingController::class, 'index']);
@@ -77,6 +87,8 @@ Route::group(['middleware' => ['auth.jwt']], function () {
         Route::delete('/{reading}', [ReadingController::class, 'destroy']);
     });
 
+
+    // TODO: padaryta pilnai
     /* Auth user's READINGS {NOTES} */
     Route::prefix('auth/readings/{reading}/notes')->group(function () {
         Route::get('', [NoteController::class, 'index']);
@@ -86,6 +98,8 @@ Route::group(['middleware' => ['auth.jwt']], function () {
         Route::delete('/{note}', [NoteController::class, 'destroy']);
     });
 
+
+    // TODO: padaryta Pilnai
     /* Auth user's GOALS*/
     Route::prefix('auth/goals')->group(function () {
         Route::get('/', [GoalController::class, 'index']);
@@ -96,7 +110,9 @@ Route::group(['middleware' => ['auth.jwt']], function () {
     });
 });
 
+// FIXME: padaryti veikianti
 Route::get('/', [BookController::class, 'index']);
+Route::get('/{book}', [BookController::class, 'show']);
 
 
 
