@@ -22,7 +22,7 @@ class PostRequest extends FormRequest
     {
         $this->merge([
             'slug' => Str::slug($this->title . ' ' . time()),
-            'user_id' => request()->user() ? auth()->user() : $this->user_id
+            'user_id' => $this->user() ? $this->user()->id : -1
         ]);
     }
 
@@ -35,7 +35,7 @@ class PostRequest extends FormRequest
     {
         $required = $this->isMethod("POST") ? "required|" : '';
         return [
-            "title" => "string|required|max:255|min:3",
+            "title" => $required . "string|max:255|min:3",
             "slug" => $required . "string|unique:posts,slug",
             "body" => $required . "string|max:1000|min:5",
             "user_id" => "required|exists:users,id"

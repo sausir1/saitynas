@@ -28,94 +28,47 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::get('users', [UserController::class, 'index']);
-Route::get('users/{user:username}', [UserController::class, 'show'])->name('user');
+
+Route::apiResource('users', UserController::class)->only(['index', 'show']);
+
 
 // Route::apiResource('badges.users', [BadgeUsersController::class]);
-
+Route::apiResource('posts', PostController::class)->only(['index', 'show']);
+Route::apiResource('books', BookController::class)->only(['index', 'show']);
+Route::apiResource('posts.comments', CommentController::class)->only(['index', 'show']);
+Route::apiResource('posts', PostController::class)->only(['index', 'show']);
+Route::apiResource('posts.comments', CommentController::class)->only(['index', 'show']);
+Route::apiResource('categories', CategoryController::class)->only(['index', 'show']);
+Route::apiResource('authors', AuthorController::class)->only(['show', 'index']);
+Route::apiResource('authors.books', BookController::class)->only(['show', 'index']);
+Route::apiResource('authors.books.comments', CommentController::class)->only(['show', 'index']);
 
 Route::group(['middleware' => ['auth.jwt']], function () {
 
+    Route::patch('auth', [AuthController::class, 'update']);
+    Route::apiResource('users', UserController::class)->except(['index', 'show']);
+    Route::apiResource('posts', PostController::class)->except(['index', 'show']);
+    Route::apiResource('posts.comments', CommentController::class)->except(['index', 'show']);
+    Route::apiResource('categories', CategoryController::class)->except(['index', 'show']);
+    Route::apiResource('authors', AuthorController::class)->except(['show', 'index']);
+    Route::apiResource('authors.books', BookController::class)->except(['show', 'index']);
+    Route::apiResource('authors.books.comments', CommentController::class)->except(['show', 'index']);
 
-    // TODO: Padaryta
-    Route::prefix('posts')->group(function () {
-        Route::get('/', [PostController::class, 'index']);
-        Route::get('/{post:slug}', [PostController::class, 'show']);
-        Route::post('/', [PostController::class, 'store']);
-        Route::patch('/{post:slug}', [PostController::class, 'update']);
-        Route::delete('/{post:slug}', [PostController::class, 'destroy']);
-    });
+    Route::apiResource('badges', BadgeController::class);
 
-    Route::apiResource('posts.comments', CommentController::class);
-
-
-    // TODO: Padaryta
-    /* BASIC auth user's functions*/
     Route::prefix('auth')->group(function () {
         Route::get('', [AuthController::class, 'getUser']);
+        Route::post('', [AuthController::class, 'updateUser']);
         Route::post('/alive', [AuthController::class, 'keepAlive']); //keep alive auth user
         Route::get('/badges', [BadgeController::class, 'getUserBadges']); //auth user earned badges
         Route::get('/follows', [FollowController::class, 'getMyFollows']); //what auth user is following
         Route::post('/follows', [FollowController::class, 'follow']); // start to follow
-    });
-
-
-    // TODO: PADARYTA
-    /*Autoriai, Autorių knygos, autorių knygos komentarai*/
-    Route::apiResource('authors', AuthorController::class);
-    Route::apiResource('authors.books', BookController::class);
-    Route::apiResource('authors.books.comments', CommentController::class);
-    /*-------------------------------------------------------------*/
-
-    Route::apiResource('badges', BadgeController::class);
-
-
-    // TODO: padaryta
-    Route::apiResource(
-        'categories',
-        CategoryController::class
-    );
-
-
-    // TODO: padaryta pilnai
-    /*Auth user's READINGS*/
-    Route::prefix('auth/readings')->group(function () {
-        Route::get('', [ReadingController::class, 'index']);
-        Route::post('', [ReadingController::class, 'store']);
-        Route::patch('/{reading}', [ReadingController::class, 'update']);
-        Route::get('/{reading}', [ReadingController::class, 'show']);
-        Route::delete('/{reading}', [ReadingController::class, 'destroy']);
-    });
-
-
-    // TODO: padaryta pilnai
-    /* Auth user's READINGS {NOTES} */
-    Route::prefix('auth/readings/{reading}/notes')->group(function () {
-        Route::get('', [NoteController::class, 'index']);
-        Route::post('', [NoteController::class, 'store']);
-        Route::patch('/{note}', [NoteController::class, 'update']);
-        Route::get('/{note}', [NoteController::class, 'show']);
-        Route::delete('/{note}', [NoteController::class, 'destroy']);
-    });
-
-
-    // TODO: padaryta Pilnai
-    /* Auth user's GOALS*/
-    Route::prefix('auth/goals')->group(function () {
-        Route::get('/', [GoalController::class, 'index']);
-        Route::get('/{goal}', [GoalController::class, 'show']);
-        Route::post('/', [GoalController::class, 'store']);
-        Route::delete('/{goal}', [GoalController::class, 'destroy']);
-        Route::patch('/{goal}', [GoalController::class, 'update']);
+        // TODO: Only logged in user see's this!
+        Route::apiResource('readings', ReadingController::class);
+        Route::apiResource('readings.notes', NoteController::class);
+        Route::apiResource('goals', GoalController::class);
     });
 });
-
-// FIXME: padaryti veikianti
-Route::get('/', [BookController::class, 'index']);
-Route::get('/{book}', [BookController::class, 'show']);
-
-
-
 
 Route::fallback(function () {
     return response()->json(["message" => "Whoops! You entered something that doesn't match any of our routes!"], 404);

@@ -24,6 +24,7 @@ class User extends Authenticatable implements JWTSubject
 
     protected $attributes = [
         'experience' => 0,
+        'is_admin' => false
     ];
 
     protected $fillable = [

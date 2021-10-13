@@ -30,6 +30,7 @@ class GoalController extends Controller
 
     public function update(Goal $goal, GoalRequest $request)
     {
+        $this->authorize('manage-goals', $goal);
         $validated = $request->validated();
         $goal->updateOrFail($validated);
         return response()->json($goal);
@@ -37,8 +38,8 @@ class GoalController extends Controller
 
     public function destroy($id)
     {
-        $goal = Goal::where('user_id', request()->user()->id)
-            ->where('id', $id)->firstOrFail();
+        $goal = Goal::findOrFail($id);
+        $this->authorize('manage-goals', $goal);
         $goal->deleteOrFail();
         return response()->json($goal, 202);
     }

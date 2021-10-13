@@ -22,6 +22,7 @@ class CategoryController extends Controller
 
     public function update(Category $category, CategoryRequest $request)
     {
+        $this->authorize('admin');
         $validated = $request->validated();
         $category->updateOrFail($validated);
         return response()->json($category);
@@ -29,6 +30,7 @@ class CategoryController extends Controller
 
     public function store(CategoryRequest $request)
     {
+        $this->authorize('admin');
         $validated = $request->validated();
         $category = Category::create($validated);
         return response()->json($category);
@@ -36,6 +38,7 @@ class CategoryController extends Controller
 
     public function destroy(Category $category)
     {
+        $this->authorize('admin');
         $category->deleteOrFail();
         return response()->json($category);
     }

@@ -17,7 +17,7 @@ class AuthorController extends Controller
 
     public function show($slug)
     {
-        $author = Author::where('id', $slug)->with('books')->firstOrFail();
+        $author = Author::where('id', $slug)->firstOrFail();
         return response()->json($author, 200);
     }
 
@@ -29,6 +29,7 @@ class AuthorController extends Controller
 
     public function store(AuthorRequest $request)
     {
+        $this->authorize('admin');
         $validated = $request->validated();
         $author = Author::create($validated);
         return response()->json($author, 201);
@@ -36,6 +37,7 @@ class AuthorController extends Controller
 
     public function update(Author $author, AuthorRequest $request)
     {
+        $this->authorize('admin');
         $validated = $request->validated();
         $author->updateOrFail($validated);
         return response()->json($author, 200);
@@ -43,6 +45,7 @@ class AuthorController extends Controller
 
     public function destroy(Author $author)
     {
+        $this->authorize('admin');
         $temp = $author;
         $author->deleteOrFail();
         return response()->json(["author" => $temp, "status" => "deleted successfully"], 202);

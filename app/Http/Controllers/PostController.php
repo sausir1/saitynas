@@ -8,16 +8,14 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-
-    //Traitas has followers
     public function index()
     {
-        return response()->json(["posts" => Post::all()], 200);
+        return response()->json(Post::all(), 200);
     }
     public function show($slug)
     {
         $post = Post::where('slug', $slug)->firstOrFail();
-        return response()->json('post', 200);
+        return response()->json($post, 200);
     }
 
     public function store(PostRequest $request)
@@ -30,6 +28,7 @@ class PostController extends Controller
     public function update($slug, PostRequest $request)
     {
         $post = Post::where('slug', $slug)->firstOrFail();
+        $this->authorize('manage-posts', $post);
         $validated = $request->validated();
         $post->updateOrFail($validated);
         return response()->json($post, 200);
@@ -38,6 +37,7 @@ class PostController extends Controller
     public function destroy($slug)
     {
         $post = Post::where('slug', $slug)->firstOrFail();
+        $this->authorize('manage-posts', $post);
         $post->deleteOrFail();
         return response()->json($post, 202);
     }

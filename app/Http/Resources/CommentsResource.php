@@ -21,7 +21,7 @@ class CommentsResource extends JsonResource
             "created_at" => $this->pivot->created_at->format('Y-m-d H:i:s'),
             "updated_at" => $this->pivot->updated_at->format('Y-m-d H:i:s'),
             "author" => $this->name,
-            "author-link" => route('user', $this->username)
+            "author-link" => route('users.show', $this->username)
         ];
     }
 }

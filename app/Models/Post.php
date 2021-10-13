@@ -20,7 +20,7 @@ class Post extends Model
 
     public function comments()
     {
-        return $this->morphToMany(User::class, 'commentable', 'comments');
+        return $this->morphToMany(User::class, 'commentable', 'comments')->withPivot(['comment', 'id'])->withTimestamps();
     }
 
     public function author()

@@ -32,6 +32,7 @@
 ## Database schema
 
 Database to relate to when working with this RESTful API
+
 ![Database schema](db_schema.png)
 
 ## Routes

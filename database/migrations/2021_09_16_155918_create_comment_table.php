@@ -20,7 +20,6 @@ class CreateCommentTable extends Migration
             $table->unsignedInteger('commentable_id');
             $table->string('commentable_type');
             $table->timestamps();
-            $table->unique(['user_id', 'commentable_id', 'commentable_type']);
             $table->foreign('user_id')->references('id')->on('users');
         });
     }

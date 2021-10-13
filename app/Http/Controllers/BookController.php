@@ -14,21 +14,18 @@ class BookController extends Controller
     {
 
         $books = Book::writtenBy($id)->with("ratings")->get();
-        // $averages = $books->map(function ($book) {
-        //     return $book->ratings->avg('rating');
-        // }); RESOURCE PANAUDOTI SITA
         return response()->json($books, 200);
     }
 
     public function show($author, $slug)
     {
-        // ->with(['author', 'category', 'comments'])->
-        $book = Book::where('slug', $slug)->where('author_id', $author)->firstOrFail();
+        $book = Book::where('slug', $slug)->writtenBy($author)->firstOrFail();
         return response()->json($book, 200);
     }
 
     public function store(BookRequest $request)
     {
+        $this->authorize('admin');
         $validated = $request->validated();
         $book = Book::create($validated);
         return response()->json($book, 201);
@@ -36,6 +33,7 @@ class BookController extends Controller
 
     public function update($author, $book, BookRequest $request)
     {
+        $this->authorize('admin');
         $book = Book::where('slug', $book)->where('author_id', $author)->firstOrFail();
         $validated = $request->validated();
         $book->updateOrFail($validated);
@@ -44,6 +42,7 @@ class BookController extends Controller
 
     public function destroy($author, $book)
     {
+        $this->authorize('admin');
         $book = Book::where('slug', $book)->where('author_id', $author)->firstOrFail();
         $book->delete();
         return response()->json($book, 202);

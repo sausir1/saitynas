@@ -27,6 +27,7 @@ class BadgeController extends Controller
 
     public function update(Badge $badge, BadgeRequest $request)
     {
+        $this->authorize('admin');
         $validated = $request->validated();
         $badge->updateOrFail($validated);
         return response()->json($badge, 200);
@@ -34,6 +35,7 @@ class BadgeController extends Controller
 
     public function store(BadgeRequest $request)
     {
+        $this->authorize('admin');
         $validated = $request->validated();
         $badge = Badge::create($validated);
         return response()->json($badge, 201);
@@ -41,6 +43,7 @@ class BadgeController extends Controller
 
     public function destroy(Badge $badge)
     {
+        $this->authorize('admin');
         $badge->deleteOrFail();
         return response()->json($badge, 202);
     }

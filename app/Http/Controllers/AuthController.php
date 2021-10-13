@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -66,5 +67,12 @@ class AuthController extends Controller
         $user->save();
 
         return response()->json(compact('user'), 201);
+    }
+
+    public function update(UserRequest $request)
+    {
+        $validated = $request->validated();
+        $request->user()->updateOrFail($validated);
+        return response()->json($request->user());
     }
 }

@@ -25,6 +25,7 @@ class CreateUserTable extends Migration
             $table->string('image')->nullable();
             $table->rememberToken();
             $table->integer('spent')->nullable();
+            $table->boolean('is_admin');
             $table->timestamps();
         });
     }

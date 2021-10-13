@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Book;
+use App\Models\Post;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CommentRequest extends FormRequest
@@ -23,6 +24,8 @@ class CommentRequest extends FormRequest
             'api/authors/{author}/books/{book}/comments',
             'api/authors/{author}/books/{book}/comments/{comment}' =>
             ['Book', Book::where('slug', $this->route('book'))->firstOrFail()->id],
+            'api/posts/{post}/comments', 'api/posts/{post}/comments/{comment}' =>
+            ['Post', Post::where('slug', $this->route('post'))->firstOrFail()->id],
             default => null
         };
         $this->merge([
